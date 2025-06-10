@@ -3,7 +3,7 @@ import toast from 'react-hot-toast';
 import styles from './SearchBar.module.css';
 
 interface SearchBarProps {
-  onSubmit: (query: string) => void;
+  onSubmit: (query: string) => Promise<void>;
 }
 
 const SubmitButton = () => {
@@ -11,7 +11,7 @@ const SubmitButton = () => {
   
   return (
     <button 
-      className={styles.button} 
+      className={styles.button}
       type="submit"
       disabled={pending}
     >
@@ -29,14 +29,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSubmit }) => {
       return;
     }
     
-    try {
-      await onSubmit(query.trim());
-      
-      const form = document.querySelector('form') as HTMLFormElement;
-      form?.reset();
-    } catch (error) {
-      toast.error('Search failed. Please try again.');
-    }
+    await onSubmit(query.trim());
   };
 
   return (
